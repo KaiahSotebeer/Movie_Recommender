@@ -48,6 +48,7 @@ def get_user_preferences(name):
     }
     return preferences
 
+
 #preferences = get_user_preferences(user_name)
 
 #Searching the api based on user preferences - below I used part of the code example generated from feedback from my light spec? Hopefully it works. 
@@ -120,3 +121,31 @@ def display_movies(sorted_movies):
         print(f'{movie["title"]} - rating {movie["vote_average"]} - released {movie.get("release_date", "unknown")}')
 
 #display_movies(sort_movies(filter_movies(movies, preferences)))
+
+#getting movie informtion to show to viewers - thank you for sharing this code!
+import requests
+def get_movie_details(movie_id):
+    url = f"https://api.themoviedb.org/3/movie/{movie_id}"
+    headers = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {tmdb_api}",
+    }
+    parameters = {
+                "language": "en-US"
+    }
+    response = requests.get(
+        url, headers=headers, params=parameters, timeout=10
+    )
+    response.raise_for_status()
+    return response.json()
+
+# CH 
+def get_imdb_url(movie_id):
+    url = f"https://api.themoviedb.org/3/movie/{movie_id}"
+    headers = {"Authorization": f"Bearer {tmdb_api}", "accept": "application/json"}
+    data = requests.get(url, headers=headers).json()
+    imdb_id = data.get("imdb_id")  # can be None or "" for some movies
+    if imdb_id is not None:
+        return f"https://www.imdb.com/title/{imdb_id}/" 
+    else:
+        return None
